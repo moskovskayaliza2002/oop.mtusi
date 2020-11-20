@@ -8,7 +8,7 @@ public class task6 {
     public static final String ANSI_BLUE = "\u001B[34m";
     public static void main(String[] args) throws IOException {
         BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print("Введите номер числа в последовательности Улана: ");
+        System.out.print("Введите номер числа в последовательности Улама: ");
         int x = Integer.parseInt(read.readLine());
         ulan(x);
     }
@@ -35,8 +35,8 @@ public class task6 {
             nextNum += 1;
         }
         if (x == 1 || x == 2)
-            System.out.println(ANSI_BLUE + x + " число в последовательнсоти Улана равно " + x);
+            System.out.println(ANSI_BLUE + x + " число в последовательнсоти Улама равно " + x);
         else
-            System.out.println(ANSI_BLUE + x + " число в последовательнсоти Улана равно " + Ulans_numbers.get(len - 1));
+            System.out.println(ANSI_BLUE + x + " число в последовательнсоти Улама равно " + Ulans_numbers.get(len - 1));
     }
 }

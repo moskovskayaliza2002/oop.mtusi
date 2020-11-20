@@ -32,20 +32,20 @@ public class lab2_1 {
         point3.setY(Double.parseDouble(arr3[1]));
         point3.setZ(Double.parseDouble(arr3[2]));
         // Сравниваем точки и высчитываем площадь
-        if ((point1.compare(point2)) || (point2.compare(point3)) || (point1.compare(point3))){
+        if (point1.compare(point2) || point2.compare(point3) || point1.compare(point3)){
             System.out.println("Введеные точки не составляют треугольник!");
         }
         else{
             System.out.println("Площадь треугольника равна: " + computeArea(point1, point2, point3));
         }
     }
-    public static double computeArea(Point3d point1, Point3d point2, Point3d point3){
+    public static Double computeArea(Point3d point1, Point3d point2, Point3d point3){
         // Вызываем методы для подсчета длин сторон и высчитываем площадь по формуле Герона
         double side1, side2, side3, area, semiPerimeter;
         side1 = point1.distanceTo(point2);
         side2 = point2.distanceTo(point3);
         side3 = point1.distanceTo(point3);
-        semiPerimeter = 0.5 * (side1 + side2 + side3);
+        semiPerimeter = (side1 + side2 + side3)/2;
         area = Math.sqrt(semiPerimeter * (semiPerimeter - side1) * (semiPerimeter - side2) * (semiPerimeter - side3));
         return area;
     }

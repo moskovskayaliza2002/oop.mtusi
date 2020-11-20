@@ -22,11 +22,11 @@ public class Point3d extends Point2d {
     }
     // ** Метод сравнения **
     public boolean compare (Point3d point){
-        return (this.getX() == point.getX()) && (this.getY() == point.getY()) && (this.getZ() == point.getZ());
+        return this.getX() == point.getX() && this.getY() == point.getY() && this.getZ() == point.getZ();
     }
     // ** Метод подсчета площади **
-    public double distanceTo (Point3d point){
+    public Double distanceTo (Point3d point){
         double distance = Math.sqrt(Math.pow(this.getX() - point.getX(), 2) + Math.pow(this.getY() - point.getY(), 2) + Math.pow(this.getZ() - point.getZ(), 2));
-        return (double)Math.round(distance * 100) / 100;
+        return (double) Math.round(distance * 100) / 100;
     }
 }
