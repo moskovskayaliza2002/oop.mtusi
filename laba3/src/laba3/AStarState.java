@@ -24,19 +24,19 @@ public class AStarState
     // и после этого она должна вернуть ссылку на вершину с наименьшей общей стоимостью.
     public Waypoint getMinOpenWaypoint()
     {
-        if (OpenWp.size()==0)
+        if (OpenWp.size() == 0)
             return null;
         else
         {
-            Waypoint point=null;
-            float totalCost=100000; // лок. переменная
+            Waypoint point = null;
+            float totalCost = 100000; // локальная переменная
             for (Location key: OpenWp.keySet()) // метод получения множества ключей
             {
-                Waypoint point_cur=OpenWp.get(key);
-                System.out.println("value="+point_cur); // метод получения значения по ключу
-                if (point_cur.getTotalCost()<totalCost)
+                Waypoint point_cur = OpenWp.get(key);
+                System.out.println("value=" + point_cur); // метод получения значения по ключу
+                if (point_cur.getTotalCost() < totalCost)
                 {
-                    totalCost=point_cur.getTotalCost();
+                    totalCost = point_cur.getTotalCost();
                     point = point_cur;
                 }
             }
