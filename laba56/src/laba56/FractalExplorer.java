@@ -1,4 +1,4 @@
-package laba4;
+package laba56;
 import java.awt.BorderLayout;
 import java.awt.geom.Rectangle2D;
 import java.awt.Container;
@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import javax.imageio.ImageIO; // обеспечивает простые операции загрузки и сохранения изображения
+import java.util.concurrent.TimeUnit;
+import java.lang.InterruptedException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 import javax.swing.*;
@@ -26,7 +28,7 @@ public class FractalExplorer
     private JButton resetBut;
     private int rowsRemaining;
 
-    private void enableUI(boolean val)
+    private void enableUI(boolean val) // включение или выключение кнопки с выпадающим списком
     {
         fractalChooser.setEnabled(val);
         saveBut.setEnabled(val);
@@ -36,23 +38,23 @@ public class FractalExplorer
     public FractalExplorer(int size)
     {
         displaySize = size;
-        gen = new Mandelbrot();
+        gen = new Mandelbrot(); // создаем объект класса Мандельброта через ссылку баз.класса
         range = new Rectangle2D.Double();
         gen.getInitialRange(range);
     }
 
     public void createAndShowGUI()
     {
-        JFrame frame = new JFrame("Фрактальный Исследователь");
+        JFrame frame = new JFrame("Фрактальный Исследователь"); // класс для создания окна графа приложения
         image = new JImageDisplay(displaySize, displaySize);
         resetBut = new JButton("Сброс дисплея");
         resetBut.setActionCommand("reset");
         FractalHandler handler = new FractalHandler();
         resetBut.addActionListener(handler);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);// при закрытии окна закрывается и приложение
         frame.getContentPane().setLayout(new BorderLayout());
-        frame.getContentPane().add(image, BorderLayout.CENTER);
-        frame.getContentPane().add(resetBut, BorderLayout.SOUTH);
+        frame.getContentPane().add(image, BorderLayout.CENTER); // размещение изображения по центру
+        frame.getContentPane().add(resetBut, BorderLayout.SOUTH);// размещение кнопки ресет в южной части окна
         JPanel buttonsPanel = new JPanel();
         JPanel fractalPanel = new JPanel();
 
@@ -60,7 +62,7 @@ public class FractalExplorer
         fractalPanel.add(label);
 
         fractalChooser = new JComboBox<String>();
-        fractalChooser.addItem(Mandelbrot.getString());
+        fractalChooser.addItem(Mandelbrot.getString()); // добавление ячеек выбора
         fractalChooser.addItem(Tricorn.getString());
         fractalChooser.addItem(BurningShip.getString());
         fractalChooser.addActionListener(handler);
@@ -76,7 +78,7 @@ public class FractalExplorer
         buttonsPanel.add(saveBut);
         frame.getContentPane().add(buttonsPanel, BorderLayout.SOUTH);
 
-        frame.getContentPane().addMouseListener(new MouseHandler());
+        frame.getContentPane().addMouseListener(new MouseHandler());// регистрируем экземпляр обработчика Mouse Listener в фрейме, метод извлекает слои панели содержимого для добавления объекта
 
 
         frame.pack();
@@ -84,11 +86,11 @@ public class FractalExplorer
         frame.setResizable(false);
     }
 
-    private class FractalHandler implements ActionListener {
+    private class FractalHandler implements ActionListener { // обработчик событий кнопок и поддержка списка фракталов
         public void actionPerformed(ActionEvent e) {
             String cmd = e.getActionCommand();
             if (e.getSource() == fractalChooser) {
-                String selectedItem = fractalChooser.getSelectedItem().toString();
+                String selectedItem = fractalChooser.getSelectedItem().toString(); // выбор из трех фракталов
 
                 if (selectedItem.equals(Mandelbrot.getString())) {
                     gen = new Mandelbrot();
@@ -117,12 +119,14 @@ public class FractalExplorer
 
                 FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG Images", "png");
                 chooser.setFileFilter(filter);
-                chooser.setAcceptAllFileFilterUsed(false);
+                chooser.setAcceptAllFileFilterUsed(false); //строка гарантирует, что средство выбора не разрешит пользователю использование отличных от png форматов.
 
 
-                if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) { // открывает
+                    // диалоговое окно «Сохранить файл», позволяя тем самым пользователю выбрать
+                    // директорию для сохранения
                     try {
-                        File f = chooser.getSelectedFile();
+                        File f = chooser.getSelectedFile(); //Если пользователь уже выбрал директорию для сохранения
                         String filePath = f.getPath();
                         if (!filePath.toLowerCase().endsWith(".png")) {
                             f = new File(filePath + ".png");
@@ -140,17 +144,18 @@ public class FractalExplorer
         }
     }
 
-    private class MouseHandler extends MouseAdapter
+    private class MouseHandler extends MouseAdapter // обработчик клика мыши
     {
 
         public void mouseClicked(MouseEvent e)
         {
+            System.out.println(rowsRemaining);
             if (rowsRemaining > 0)
                 return;
 
 
             double xCoord = FractalGenerator.getCoord(range.x, range.x + range.width,
-                    displaySize, e.getX());
+                    displaySize, e.getX()); // x - пиксельная координата; xCoord - координата в пространстве фрактала
 
             double yCoord = FractalGenerator.getCoord(range.y, range.y + range.height,
                     displaySize, e.getY());
@@ -162,27 +167,29 @@ public class FractalExplorer
         }
     }
 
-    private class FractalWorker extends SwingWorker<Object, Object>
-    {
+    private class FractalWorker extends SwingWorker<Object, Object> // SwingWorker - абстрактный класс, включающий методы doInBackground() и done()
+    { // FractalWorker отвечает за вычисление значений цвета для  одной строки фрактала
 
-        private int _y;
+        private int _y; // целочисленная y-координата вычисляемой строки
 
-        private int[] _RGBVals;
+        private int[] _RGBVals; // массив чисел типа int для хранения вычисленных значений RGB для каждого пикселя в этой строке
 
         public FractalWorker(int y)
         {
             _y = y;
         }
 
-        public Object doInBackground()
+        public Object doInBackground() // метод, который  выполняет фоновые операции
         {
             _RGBVals = new int[displaySize];
 
-            double yCoord = FractalGenerator.getCoord(range.y, range.y + range.height, displaySize, _y);
+            double yCoord = FractalGenerator.getCoord(range.y, range.y + range.height,
+                    displaySize, _y);
 
-            for (int x = 0; x < displaySize; x++) {
+            for (int x = 0; x < displaySize; x++) { // цикл должен сохраняет каждое значение RGB в соответствующем элементе целочисленного массива
 
-                double xCoord = FractalGenerator.getCoord(range.x, range.x + range.width, displaySize, x);
+                double xCoord = FractalGenerator.getCoord(range.x, range.x + range.width,
+                        displaySize, x);
                 int numIters;
                 int rgbColor = 0;
                 float hue;
@@ -196,31 +203,31 @@ public class FractalExplorer
                 _RGBVals[x] = rgbColor;
             }
 
-            return null;
+            return null; // возвращает объект типа Object
         }
 
-        public void done()
+        public void done() // метод вызывается, когда фоновая задача завершена. Методу разрешено взаимодействовать с пользовательским интерфейсом
         {
             for (int x = 0; x < displaySize; x++) {
                 image.drawPixel(x, _y, _RGBVals[x]);
             }
 
-            image.repaint(0, 0, _y, displaySize, 1);
+            image.repaint(0, 0, _y, displaySize, 1); // позволяет указать область для перерисовки
             System.out.println(rowsRemaining);
             if (rowsRemaining-- < 1) {
-                enableUI(true);
+                enableUI(true); // все кнопки активны
             }
         }
     }
 
-    public void drawFractal()
+    public void drawFractal() // перерисовка фрактала
     {
-        enableUI(false);
+        enableUI(false); // все кнопки запрещены
 
         for (int y = 0; y < displaySize; y++)
         {
             FractalWorker worker = new FractalWorker(y);
-            worker.execute();
+            worker.execute(); // запуск задачи в фоновом режиме
         }
 
         image.repaint();
@@ -228,8 +235,8 @@ public class FractalExplorer
     }
     public static void main(String[] args)
     {
-        FractalExplorer explorer = new FractalExplorer(600);
-        explorer.createAndShowGUI();
-        explorer.drawFractal();
+        FractalExplorer explorer = new FractalExplorer(600); // размер вызываемого окна программы
+        explorer.createAndShowGUI(); // отражение программы
+        explorer.drawFractal(); // зарисовка фрактала
     }
 }

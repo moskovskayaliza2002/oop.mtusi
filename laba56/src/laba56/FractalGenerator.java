@@ -1,4 +1,4 @@
-package laba4;
+package laba56;
 import java.awt.geom.Rectangle2D;
 
 

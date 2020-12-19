@@ -1,10 +1,10 @@
-package laba4;
+package laba56;
 import java.awt.geom.Rectangle2D;
 
 public class Mandelbrot extends FractalGenerator
 {
-    public static final int MAX_ITERATIONS = 2000;
-    public void getInitialRange(Rectangle2D.Double range) 
+    public static final int MAX_ITERATIONS = 2000; // максимальное количество итераций
+    public void getInitialRange(Rectangle2D.Double range) // прямоугольный объект с double координат. (диапазон комплексной плоскости)
     {
         range.x = -2;
         range.y = -1.5;
@@ -31,6 +31,6 @@ public class Mandelbrot extends FractalGenerator
         return count < MAX_ITERATIONS ? count : -1;
     }
     public static String getString() {
-        return "Mandelbrot";
+        return "Mandelbrot"; // возвращение строку наименования фрактала
     }
 }
