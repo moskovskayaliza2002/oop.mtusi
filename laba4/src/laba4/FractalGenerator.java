@@ -1,6 +1,6 @@
 package laba4;
-import java.awt.geom.Rectangle2D;
 
+import java.awt.geom.Rectangle2D;
 
 public abstract class FractalGenerator
 {
@@ -10,6 +10,7 @@ public abstract class FractalGenerator
         double range = rangeMax - rangeMin;
         return rangeMin + (range * (double) coord / (double) size);
     }
+
     public abstract void getInitialRange(Rectangle2D.Double range);
 
     public void recenterAndZoomRange(Rectangle2D.Double range, double centerX, double centerY, double scale)

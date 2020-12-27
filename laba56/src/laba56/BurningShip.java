@@ -1,9 +1,7 @@
 package laba56;
 import java.awt.geom.Rectangle2D;
-
 public class BurningShip extends FractalGenerator {
     public static final int MAX_ITERATIONS = 2000;
-
     public void getInitialRange(Rectangle2D.Double range) {
         range.x = -2;
         range.y = -2.5;
@@ -12,13 +10,11 @@ public class BurningShip extends FractalGenerator {
         range.height = 4;
     }
     // функция z_n = (/Re(z_(n-1))| + i * / Im(z_(n-1))|)^2 + c - формула для данного фрактала
-
     public int numIterations(double x, double y) {
         int count = 0;
         double re = 0;
         double im = 0;
         double z_n2 = 0;
-
         while(count < MAX_ITERATIONS && z_n2 < 4) {
             count++;
 
@@ -33,7 +29,6 @@ public class BurningShip extends FractalGenerator {
 
         return count < MAX_ITERATIONS ? count : -1;
     }
-
     public static String getString() {
         return "Burning Ship";
     }

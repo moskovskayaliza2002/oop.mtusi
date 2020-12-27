@@ -1,7 +1,5 @@
 package laba56;
 import java.awt.geom.Rectangle2D;
-
-
 public abstract class FractalGenerator
 {
     public static double getCoord(double rangeMin, double rangeMax, int size, int coord) {
